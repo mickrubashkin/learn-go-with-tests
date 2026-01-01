@@ -2,6 +2,10 @@ package structs
 
 import "testing"
 
+type Shape interface {
+	Area() float64
+}
+
 func TestPerimeter(t *testing.T) {
 	rectangle := Rectangle{10.0, 10.0}
 	got := Perimeter(rectangle)
@@ -13,22 +17,19 @@ func TestPerimeter(t *testing.T) {
 }
 
 func TestArea(t *testing.T) {
-	t.Run("rectangles", func(t *testing.T) {
-		rectangle := Rectangle{4.0, 3.0}
-		got := rectangle.Area()
-		want := 12.0
 
-		if got != want {
-			t.Errorf("got %g want %g", got, want)
-		}
-	})
-	t.Run("circles", func(t *testing.T) {
-		circle := Circle{10.0}
-		got := circle.Area()
-		want := 314.1592653589793
+	areaTests := []struct {
+		shape Shape
+		want  float64
+	}{
+		{Rectangle{12, 6}, 72.0},
+		{Circle{10}, 314.1592653589793},
+	}
 
-		if got != want {
-			t.Errorf("got %g want %g", got, want)
+	for _, tt := range areaTests {
+		got := tt.shape.Area()
+		if got != tt.want {
+			t.Errorf("got %g want %g", got, tt.want)
 		}
-	})
+	}
 }
